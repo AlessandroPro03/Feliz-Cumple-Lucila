@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación Cumpleaños 50</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="envelope-wrapper" id="envelope" data-state="0">
+            <div class="envelope">
+                <div class="front"></div>
+                <div class="top"></div> 
+                <div class="card">
+                    <h2>Lucila</h2>
+                    <p>Celebrando 50 años de vida</p>
+                    <div class="divider"></div>
+                    <span class="open-text">Estás invitado</span>
+                </div>
+            </div>
+            <div class="wax-seal" id="heart-btn">
+                <span>50</span>
+            </div>
+        </div>
+        <p class="instruction">Haz clic en el sello para abrir la invitación</p>
+    </div>
+
+    <div id="cake-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="btn-cerrar-modal">&times;</span>
+            
+            <div class="timer timer-left">
+                <div class="time-box"><span id="dias">00</span><small>Días</small></div>
+                <div class="time-box"><span id="horas">00</span><small>Hrs</small></div>
+            </div>
+
+            <div class="timer timer-right">
+                <div class="time-box"><span id="minutos">00</span><small>Min</small></div>
+                <div class="time-box"><span id="segundos">00</span><small>Seg</small></div>
+            </div>
+
+            <div class="cake-container_new">
+                <div class="candle-number_new">
+                    50
+                    <div class="flame_new"></div>
+                </div>
+                <div class="cake-tier top-tier"></div>
+                <div class="cake-tier bottom-tier"></div>
+                <div class="cake-stand"></div>
+            </div>
+            
+            <h2 class="modal-title">¡Acompáñame a celebrar!</h2>
+            <p class="modal-desc">Será una noche inolvidable llena de alegría y buena compañía.</p>
+            <button class="btn-confirmar">Confirmar Asistencia</button>
+        </div>
+    </div>
+
+    <div id="video-overlay" class="video-overlay">
+        <button id="close-video-btn" class="close-video-btn">✖</button>
+        <video id="cumple-video" controls>
+            <source src="video-cumple.mp4" type="video/mp4">
+            Tu navegador no soporta la reproducción de videos.
+        </video>
+    </div>
+
+    <audio id="audio-fondo-1" src="audio_1.mpeg"></audio>
+    <audio id="audio-fondo-2" src="audio_2.mp4"></audio>
+ 
+    <script src="script.js"></script>
+</body>
+</html>

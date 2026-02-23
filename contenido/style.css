@@ -1,0 +1,485 @@
+:root {
+    --bg-dark: #1a1a1d;
+    --envelope-color: #f4ecd8;
+    --envelope-dark: #e3d5b8;
+    --gold: #d4af37;
+    --gold-glow: rgba(212, 175, 55, 0.6);
+    --wax-red: #8b0000;
+    --text-main: #333;
+}
+
+body {
+    background: radial-gradient(circle at center, #2c2c34, var(--bg-dark));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    overflow: hidden;
+}
+
+.container {
+    text-align: center;
+}
+
+/* --- SOBRE (Más grande y proporcionado) --- */
+.envelope-wrapper {
+    position: relative;
+    cursor: pointer;
+    margin-bottom: 40px;
+    width: 450px;
+    height: 300px;
+    transition: transform 0.5s ease;
+}
+
+.envelope-wrapper:hover {
+    transform: translateY(-5px);
+}
+
+.envelope {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: var(--envelope-dark);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    border-radius: 4px;
+}
+
+.front {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--envelope-color);
+    z-index: 2;
+    border-radius: 0 0 4px 4px;
+    /* Efecto de pliegues del sobre */
+    clip-path: polygon(0% 0%, 50% 50%, 100% 0%, 100% 100%, 0% 100%);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+}
+
+.top {
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-left: 225px solid transparent; /* Mitad de 450px */
+    border-right: 225px solid transparent;
+    border-top: 170px solid #eaddc0; /* Solapa ligeramente más oscura */
+    z-index: 3;
+    transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.9s;
+    transform-origin: top;
+    filter: drop-shadow(0 5px 5px rgba(0,0,0,0.15));
+}
+
+[data-state="1"] .top { transform: rotateX(80deg); }
+[data-state="2"] .top, [data-state="3"] .top { transform: rotateX(180deg); z-index: 1; }
+
+/* --- CARTA INTERIOR --- */
+.card {
+    position: absolute;
+    bottom: 0;
+    width: 90%;
+    height: 95%; /* La carta ocupa casi todo el sobre */
+    left: 5%;
+    background: #fffcf5;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+    transition: transform 1.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s; /* Delay para que abra primero la solapa */
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+[data-state="3"] .card {
+    transform: translateY(-120px); /* La carta sale del sobre */
+    z-index: 4;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: var(--gold);
+    margin: 0;
+    font-weight: 700;
+}
+
+.card p {
+    font-size: 1rem;
+    color: var(--text-main);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 10px 0;
+}
+
+.divider {
+    width: 50px;
+    height: 2px;
+    background-color: var(--gold);
+    margin: 15px 0;
+}
+
+.open-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: #777;
+}
+
+/* --- SELLO DE CERA (Reemplaza al corazón) --- */
+.wax-seal {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle at 30% 30%, #a81c1c, var(--wax-red));
+    border-radius: 50%;
+    z-index: 4;
+    transition: all 0.5s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4), inset 0 0 5px rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #600000;
+}
+
+.wax-seal span {
+    font-family: 'Playfair Display', serif;
+    color: #eebb66;
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+}
+
+[data-state="2"] .wax-seal, [data-state="3"] .wax-seal {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.instruction {
+    font-size: 1.1rem;
+    color: #b3b3b3;
+    letter-spacing: 1px;
+    margin-top: 30px;
+}
+
+/* --- MODAL ELEGANTE --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.85); /* Fondo más oscuro */
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #1f1f1f, #111);
+    padding: 50px 40px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #333;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 20px var(--gold-glow);
+    width: 350px;
+    color: #fff;
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-button:hover {
+    color: var(--gold);
+}
+
+/* --- TORTA MINIMALISTA 50 AÑOS --- */
+.cake-container_new {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    margin: 20px auto 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* Pisos de la torta estilo "Fondant" blanco elegante */
+.cake-tier {
+    background: linear-gradient(to right, #e0e0e0 0%, #ffffff 50%, #e0e0e0 100%);
+    border-bottom: 3px solid var(--gold);
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    position: relative;
+}
+
+.top-tier {
+    width: 100px;
+    height: 50px;
+    z-index: 2;
+}
+
+.bottom-tier {
+    width: 160px;
+    height: 60px;
+    z-index: 1;
+}
+
+/* Base dorada */
+.cake-stand {
+    width: 200px;
+    height: 10px;
+    background: linear-gradient(to right, #a67c00, #bf953f, #fcf6ba, #b38728, #fdbf59, #bf953f, #a67c00);
+    border-radius: 10px;
+    box-shadow: 0 10px 10px rgba(0,0,0,0.6);
+}
+
+/* Número 50 y Llama */
+.candle-number_new {
+    position: absolute;
+    top: -10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 65px;
+    color: var(--gold);
+    text-shadow: 0 0 15px var(--gold-glow), 2px 2px 4px rgba(0,0,0,0.8);
+    z-index: 3;
+}
+
+.flame_new {
+    position: absolute;
+    top: -15px;
+    left: 45%;
+    width: 10px;
+    height: 20px;
+    background: radial-gradient(ellipse at bottom, #fff 10%, #ffeb3b 40%, #ff9800 80%, transparent 100%);
+    border-radius: 50% 50% 20% 20%;
+    filter: blur(1px);
+    animation: flicker 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes flicker {
+    0% { transform: scale(1) rotate(-1deg); opacity: 0.9; box-shadow: 0 0 10px #ff9800; }
+    100% { transform: scale(1.1) rotate(1deg); opacity: 1; box-shadow: 0 0 20px #ffeb3b, 0 -10px 30px #ff9800; }
+}
+
+/* Textos del modal */
+.modal-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--gold);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.modal-desc {
+    font-size: 0.95rem;
+    color: #ccc;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+.btn-confirmar {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 12px 24px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-confirmar:hover {
+    background: var(--gold);
+    color: var(--bg-dark);
+    box-shadow: 0 0 15px var(--gold-glow);
+}
+
+/* --- ESTILOS DEL VIDEO SORPRESA --- */
+.video-overlay {
+    display: none; /* Oculto inicialmente */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 9999; /* Por encima de todo */
+}
+
+.video-overlay video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Evita que el video se deforme */
+    outline: none;
+}
+
+.close-video-btn {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10000;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.close-video-btn:hover {
+    background: var(--wax-red);
+    transform: scale(1.1);
+}
+
+/* --- ESTILOS PARA LA PANTALLA FINAL (FOTO Y DATOS) --- */
+/* Reemplaza el bloque anterior de .mom-photo por este: */
+.mom-photo {
+    width: 280px;  /* Mucho más grande (antes era 160px) */
+    height: 280px; /* Mucho más grande (antes era 160px) */
+    object-fit: cover; /* Rellena el círculo sin deformar la foto */
+    object-position: above; /* Centra la imagen para que se vea bien la cara */
+    border-radius: 75%;
+    border: 4px solid var(--gold); /* Borde un poco más grueso */
+    box-shadow: 0 0 25px var(--gold-glow); /* Brillo más intenso */
+    margin: 0 auto 25px;
+    display: block;
+    animation: fadeInZoom 1s ease-out;
+}
+
+.party-details {
+    text-align: left;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 3px solid var(--gold);
+    margin-top: 20px;
+    animation: fadeInUp 1s ease-out 0.5s both;
+}
+
+.party-details p {
+    font-size: 1.1rem;
+    color: #eaeaea;
+    margin: 12px 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.party-details strong {
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+
+/* Animaciones de entrada suaves */
+@keyframes fadeInZoom {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- TEMPORIZADOR LATERAL --- */
+.timer {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    animation: fadeInZoom 1s ease-out 0.8s both; /* Aparece con un ligero retraso al abrir la carta */
+}
+
+/* Posiciones a los costados de la ventana principal */
+.timer-left {
+    left: -130px; 
+}
+
+.timer-right {
+    right: -130px;
+}
+
+.time-box {
+    background: linear-gradient(135deg, #1f1f1f, #111);
+    border: 1px solid rgba(212, 175, 55, 0.5); /* Borde dorado semi-transparente */
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    min-width: 80px;
+}
+
+.time-box span {
+    display: block;
+    font-size: 2rem;
+    font-family: 'Playfair Display', serif;
+    font-weight: bold;
+    color: var(--gold);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.time-box small {
+    font-size: 0.7rem;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Adaptación para pantallas pequeñas (Celulares) */
+@media (max-width: 768px) {
+    .timer {
+        position: relative;
+        top: 0;
+        transform: none;
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+        margin: 15px 0;
+    }
+    .timer-left, .timer-right {
+        left: 0;
+        right: 0;
+    }
+}
+
+/* --- ESTILO PARA EL ENLACE DE GOOGLE MAPS --- */
+.map-link {
+    color: #eaeaea; /* Mismo color del texto normal */
+    text-decoration: underline; /* Subrayado para indicar que es clickeable */
+    text-decoration-color: var(--gold); /* Subrayado en color dorado */
+    text-underline-offset: 4px; /* Separa un poco la línea del texto */
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.map-link:hover {
+    color: var(--gold); /* Se vuelve dorado al pasar el ratón */
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.6); /* Brillo dorado */
+}
